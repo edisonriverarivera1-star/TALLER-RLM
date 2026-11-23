@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Edison Rivera Rivera Katerine Petrel Bernal Antonio Jaraba Adriana constanza Rodriguez Yesica Lorena Jaramillo">
+
+<title>REGRESIÓN LINEAL MÚLTIPLE</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="index_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-da6801bb47887cffec19aab6b5fb5c7d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap-4b064ad5cf698f245b930d8c9ed74028.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<style>html{ scroll-behavior: smooth; }</style>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background: #98b6ed;
+      }
+</style>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="estilos.css">
+</head>
+
+<body class="quarto-light">
+
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">REGRESIÓN LINEAL MÚLTIPLE</h1>
+            <p class="subtitle lead">Fundamentos teóricos, ejerciciO</p>
+                      </div>
+  </div>
+    
+  <div class="quarto-title-meta-author column-page-left">
+    <div class="quarto-title-meta-heading">Autor/a</div>
+    <div class="quarto-title-meta-heading">Afiliación</div>
+    
+      <div class="quarto-title-meta-contents">
+      <p class="author">Edison Rivera Rivera<br>Katerine Petrel Bernal<br>Antonio Jaraba<br>Adriana constanza Rodriguez<br>Yesica Lorena Jaramillo </p>
+    </div>
+    <div class="quarto-title-meta-contents">
+          <p class="affiliation">
+              <a href="https://www.esap.edu.co/">
+              Escuela Superior de Administración Pública
+              </a>
+            </p>
+        </div>
+    </div>
+
+  <div class="quarto-title-meta column-page-left">
+
+        
+      <div>
+      <div class="quarto-title-meta-heading">Fecha de publicación</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">22 de noviembre de 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#cargar-paquetes" id="toc-cargar-paquetes" class="nav-link active" data-scroll-target="#cargar-paquetes"><span class="header-section-number">1</span> .Cargar paquetes</a></li>
+  <li><a href="#conceptos-fundamentales-de-regresión-lineal-múltiple" id="toc-conceptos-fundamentales-de-regresión-lineal-múltiple" class="nav-link" data-scroll-target="#conceptos-fundamentales-de-regresión-lineal-múltiple"><span class="header-section-number">2</span> .Conceptos Fundamentales de Regresión Lineal Múltiple</a></li>
+  <li><a href="#estimación-por-mínimos-cuadrados-ordinarios" id="toc-estimación-por-mínimos-cuadrados-ordinarios" class="nav-link" data-scroll-target="#estimación-por-mínimos-cuadrados-ordinarios"><span class="header-section-number">3</span> .Estimación por mínimos cuadrados ordinarios</a></li>
+  <li><a href="#supuestos-y-diagnóstico-del-modelo" id="toc-supuestos-y-diagnóstico-del-modelo" class="nav-link" data-scroll-target="#supuestos-y-diagnóstico-del-modelo"><span class="header-section-number">4</span> .Supuestos y diagnóstico del modelo</a></li>
+  <li><a href="#ejercicio-propuesto" id="toc-ejercicio-propuesto" class="nav-link" data-scroll-target="#ejercicio-propuesto"><span class="header-section-number">5</span> .Ejercicio propuesto</a></li>
+  <li><a href="#creacion-de-la-base-de-datos" id="toc-creacion-de-la-base-de-datos" class="nav-link" data-scroll-target="#creacion-de-la-base-de-datos"><span class="header-section-number">6</span> .Creacion de la base de datos</a></li>
+  <li><a href="#exploracion-de-variables" id="toc-exploracion-de-variables" class="nav-link" data-scroll-target="#exploracion-de-variables"><span class="header-section-number">7</span> .Exploracion de variables</a></li>
+  <li><a href="#estimamos-el-modelo" id="toc-estimamos-el-modelo" class="nav-link" data-scroll-target="#estimamos-el-modelo"><span class="header-section-number">8</span> .Estimamos el modelo</a>
+  <ul class="collapse">
+  <li><a href="#interpretación-del-modelo-estimado" id="toc-interpretación-del-modelo-estimado" class="nav-link" data-scroll-target="#interpretación-del-modelo-estimado"><span class="header-section-number">8.1</span> .Interpretación del modelo estimado</a></li>
+  </ul></li>
+  <li><a href="#predicción-para-una-jornada-de-atención" id="toc-predicción-para-una-jornada-de-atención" class="nav-link" data-scroll-target="#predicción-para-una-jornada-de-atención"><span class="header-section-number">9</span> .Predicción para una jornada de atención</a></li>
+  <li><a href="#validación-de-los-supuestos-en-r" id="toc-validación-de-los-supuestos-en-r" class="nav-link" data-scroll-target="#validación-de-los-supuestos-en-r"><span class="header-section-number">10</span> .Validación de los supuestos en R</a>
+  <ul class="collapse">
+  <li><a href="#diagnóstico-gráfico-general" id="toc-diagnóstico-gráfico-general" class="nav-link" data-scroll-target="#diagnóstico-gráfico-general"><span class="header-section-number">10.1</span> .Diagnóstico gráfico general</a></li>
+  <li><a href="#linealidad-y-homoscedasticidad-residuos-frente-a-ajustados" id="toc-linealidad-y-homoscedasticidad-residuos-frente-a-ajustados" class="nav-link" data-scroll-target="#linealidad-y-homoscedasticidad-residuos-frente-a-ajustados"><span class="header-section-number">10.2</span> .Linealidad y homoscedasticidad: residuos frente a ajustados</a></li>
+  <li><a href="#normalidad-q-q-plot-e-histograma" id="toc-normalidad-q-q-plot-e-histograma" class="nav-link" data-scroll-target="#normalidad-q-q-plot-e-histograma"><span class="header-section-number">10.3</span> .Normalidad: Q-Q plot e histograma</a></li>
+  <li><a href="#homoscedasticidad-prueba-de-breusch-pagan" id="toc-homoscedasticidad-prueba-de-breusch-pagan" class="nav-link" data-scroll-target="#homoscedasticidad-prueba-de-breusch-pagan"><span class="header-section-number">10.4</span> .Homoscedasticidad: prueba de Breusch-Pagan</a></li>
+  <li><a href="#independencia-durbin-watson-cuando-corresponda" id="toc-independencia-durbin-watson-cuando-corresponda" class="nav-link" data-scroll-target="#independencia-durbin-watson-cuando-corresponda"><span class="header-section-number">10.5</span> .Independencia: Durbin-Watson cuando corresponda</a></li>
+  <li><a href="#multicolinealidad-factor-vif" id="toc-multicolinealidad-factor-vif" class="nav-link" data-scroll-target="#multicolinealidad-factor-vif"><span class="header-section-number">10.6</span> .Multicolinealidad: factor VIF</a></li>
+  <li><a href="#observaciones-influyentes-distancia-de-cook" id="toc-observaciones-influyentes-distancia-de-cook" class="nav-link" data-scroll-target="#observaciones-influyentes-distancia-de-cook"><span class="header-section-number">10.7</span> .Observaciones influyentes: distancia de Cook</a></li>
+  <li><a href="#tabla-resumen-de-pruebas" id="toc-tabla-resumen-de-pruebas" class="nav-link" data-scroll-target="#tabla-resumen-de-pruebas"><span class="header-section-number">10.8</span> .Tabla resumen de pruebas</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<div style="position:absolute; top:10px; right:10px;">
+<img src="Logo_Esap.png" width="150">
+</div>
+<style>
+body{
+  background-color:#f7f6ed;
+  font-size:130%;
+  text-align:justify;
+}
+</style>
+<section id="cargar-paquetes" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> .Cargar paquetes</h1>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ipak <span class="ot">&lt;-</span> <span class="cf">function</span>(pkg){</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">options</span>(<span class="at">repos =</span> <span class="fu">c</span>(<span class="at">CRAN=</span><span class="st">"https://cloud.r-project.org"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  new.pkg <span class="ot">&lt;-</span> pkg[<span class="sc">!</span>(pkg <span class="sc">%in%</span> <span class="fu">rownames</span>(<span class="fu">installed.packages</span>()))]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(new.pkg)) <span class="fu">install.packages</span>(new.pkg, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(<span class="fu">lapply</span>(pkg, <span class="cf">function</span>(p)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(p, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>,<span class="st">"kableExtra"</span>,<span class="st">"psych"</span>,<span class="st">"readxl"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ipak</span>(packages)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>La regresión lineal múltiple es una técnica estadística que permite estudiar la relación entre una variable respuesta cuantitativa y dos o más variables explicativas. Además de estimar la asociación entre las variables, el modelo permite realizar predicciones y evaluar cuánto aporta cada predictor, manteniendo constantes los demás.</p>
+<p>En este material se estudia la formulación del modelo, la interpretación de sus coeficientes, la estimación por mínimos cuadrados ordinarios y la validación de los principales supuestos. Se utiliza un ejercicio simulado en el contexto de la administración pública.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Resultados de aprendizaje</strong></p>
+<p>Al finalizar, el estudiante podrá:</p>
+<ol type="1">
+<li><p>Explicar el propósito y la estructura de un modelo de regresión lineal múltiple.</p></li>
+<li><p>Estimar un modelo en R e interpretar sus coeficientes, pruebas de significancia y medidas de ajuste.</p></li>
+<li><p>Examinar los supuestos mediante gráficos y pruebas estadísticas.</p></li>
+<li><p>Identificar problemas de multicolinealidad y observaciones influyentes.</p></li>
+<li><p>Comunicar los resultados con criterio estadístico, sin confundir asociación con causalidad.</p></li>
+</ol>
+</div>
+</div>
+</section>
+<section id="conceptos-fundamentales-de-regresión-lineal-múltiple" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> .Conceptos Fundamentales de Regresión Lineal Múltiple</h1>
+<p><strong>¿Qué es la regresión lineal múltiple?</strong></p>
+<p>La <strong>regresión lineal múltiple</strong> es un método estadístico paramétrico que modela el valor esperado condicional de una variable respuesta cuantitativa <span class="math inline">Y</span> en función de <span class="math inline">k</span> variables explicativas o predictoras <span class="math inline">X_1, X_2, \dots, X_k</span>.</p>
+<p>A diferencia de la regresión lineal simple que evalúa un único predictor, la formulación múltiple permite estimar el efecto marginal de cada variable explicativa controlando simultáneamente por la influencia de las demás covariables incluidas en el modelo. Por ejemplo, en la gestión de una entidad pública, puede analizarse cómo el número mensual de trámites atendidos se asocia con las horas de capacitación del personal, los años de experiencia laboral y el nivel de implementación tecnológica.</p>
+<p><strong>Modelo poblacional y notación</strong></p>
+<p>Para la observación <span class="math inline">i \in \{1, 2, \dots, n\}</span>, el modelo poblacional de regresión lineal múltiple se expresa como:</p>
+<p><span class="math display">Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \dots + \beta_k X_{ki} + \varepsilon_i</span></p>
+<p>En notación matricial, considerando el vector respuesta <span class="math inline">\mathbf{Y} \in \mathbb{R}^n</span>, la matriz de diseño <span class="math inline">\mathbf{X} \in \mathbb{R}^{n \times (k+1)}</span> (incluida la columna de unos para el intercepto), el vector de parámetros <span class="math inline">\boldsymbol{\beta} \in \mathbb{R}^{k+1}</span> y el vector de perturbaciones <span class="math inline">\boldsymbol{\varepsilon} \in \mathbb{R}^n</span>, el modelo se escribe como:</p>
+<p><span class="math display">\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}</span></p>
+<p>Donde:</p>
+<ul>
+<li><span class="math inline">Y_i</span>: valor de la variable respuesta cuantitativa para la observación <span class="math inline">i</span>.</li>
+<li><span class="math inline">\beta_0</span>: intercepto poblacional o valor esperado de <span class="math inline">Y</span> cuando todos los predictores cumplen <span class="math inline">X_{1i} = X_{2i} = \dots = X_{ki} = 0</span> (siempre que cero pertenezca o tenga sentido en el dominio de las variables).</li>
+<li><span class="math inline">\beta_j</span> (<span class="math inline">j = 1, 2, \dots, k</span>): coeficiente de pendiente parcial; mide el cambio esperado en <span class="math inline">Y</span> ante un incremento de una unidad en <span class="math inline">X_j</span>, manteniendo constantes los demás predictores (<span class="math inline">X_m</span> para <span class="math inline">m \neq j</span>).</li>
+<li><span class="math inline">X_{ji}</span>: valor observado del <span class="math inline">j</span>-ésimo predictor para la <span class="math inline">i</span>-ésima unidad de análisis.</li>
+<li><span class="math inline">\varepsilon_i</span>: término de error aleatorio o perturbación estocástica, que recoge los factores no observados y la variabilidad inherente del proceso.</li>
+</ul>
+<p><strong>Modelo ajustado y residuos</strong></p>
+<p>Al estimar los parámetros mediante mínimos cuadrados ordinarios (MCO), minimizando la suma de cuadrados residuales <span class="math inline">\sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2</span>, se obtiene el vector estimado <span class="math inline">\hat{\mathbf{b}} = (\mathbf{X}^\top \mathbf{X})^{-1}\mathbf{X}^\top \mathbf{Y}</span> (asumiendo <span class="math inline">\mathbf{X}^\top \mathbf{X}</span> invertible) y la ecuación ajustada:</p>
+<p><span class="math display">\hat{Y}_i = b_0 + b_1 X_{1i} + b_2 X_{2i} + \dots + b_k X_{ki}</span></p>
+<p>donde <span class="math inline">b_0</span> y <span class="math inline">b_j</span> denotan las estimaciones muestrales de <span class="math inline">\beta_0</span> y <span class="math inline">\beta_j</span>, respectivamente, y <span class="math inline">\hat{Y}_i</span> es el valor ajustado o predicho para la observación <span class="math inline">i</span>.</p>
+<p>El residuo ordinario de cada observación se define como la diferencia entre el valor observado y el valor ajustado por el modelo:</p>
+<p><span class="math display">e_i = Y_i - \hat{Y}_i</span></p>
+</section>
+<section id="estimación-por-mínimos-cuadrados-ordinarios" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> .Estimación por mínimos cuadrados ordinarios</h1>
+<p>El método de mínimos cuadrados ordinarios (MCO) selecciona los coeficientes que minimizan la suma de los cuadrados de los residuos:</p>
+<p><span class="math display">SCE = \sum_{i=1}^{n} (Y_i - \widehat{Y}_i)^2</span></p>
+<p>En notación matricial:</p>
+<p><span class="math display">\widehat{\boldsymbol{\beta}} = (X'X)^{-1}X'Y</span> siempre que la matriz <span class="math inline">X'X</span> sea invertible. La multicolinealidad perfecta impide obtener una solución única por esta expresión.</p>
+<p><strong>¿Cómo se evalúa el modelo?</strong></p>
+<ul>
+<li><span class="math inline">R^2</span>: proporción de la variabilidad observada de <span class="math inline">Y</span> explicada por el conjunto de predictores en la muestra.</li>
+<li><span class="math inline">R^2</span> ajustado: ajusta el <span class="math inline">R^2</span> teniendo en cuenta el número de predictores y el tamaño de muestra; resulta útil al comparar modelos con diferente número de variables.</li>
+<li><strong>Prueba</strong> <span class="math inline">F</span> global: contrasta si todos los coeficientes de pendiente son simultáneamente cero.</li>
+<li><strong>Pruebas</strong> <span class="math inline">t</span> individuales: evalúan si cada coeficiente de pendiente es diferente de cero, condicionado a los demás predictores.</li>
+<li><strong>Error estándar residual</strong>: resume el tamaño típico de los residuos en las unidades de <span class="math inline">Y</span>.</li>
+</ul>
+<p>Un <span class="math inline">R^2</span> alto no demuestra que el modelo sea correcto ni que exista causalidad. La evaluación debe incluir teoría, calidad de los datos, diagnóstico de residuos y validación del modelo.</p>
+</section>
+<section id="supuestos-y-diagnóstico-del-modelo" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> .Supuestos y diagnóstico del modelo</h1>
+<p>Los supuestos se refieren principalmente al comportamiento del error del modelo y a la especificación de la relación. No todos se verifican con una sola prueba. Se recomienda combinar gráficos, pruebas estadísticas y conocimiento del contexto.</p>
+<p><strong>Linealidad y especificación adecuada</strong></p>
+<p>Se supone que la media condicional de <span class="math inline">Y</span> puede representarse adecuadamente mediante una combinación lineal de los predictores incluidos. La linealidad se refiere a los parámetros; pueden incorporarse transformaciones o términos polinómicos si la teoría y los gráficos lo justifican.</p>
+<p><strong>Diagnóstico:</strong> gráfico de residuos frente a valores ajustados y gráficos de residuos frente a cada predictor. Se espera una nube sin patrones sistemáticos. Curvaturas pueden indicar relaciones no lineales o variables omitidas.</p>
+<p><strong>Independencia de los errores</strong></p>
+<p>Los errores de distintas observaciones no deben presentar dependencia relevante. Es especialmente importante cuando los datos están ordenados en el tiempo, por ejemplo, mediciones mensuales de una misma entidad.</p>
+<p><strong>Diagnóstico:</strong> revisar cómo se recolectaron los datos y, cuando el orden tenga significado temporal, examinar residuos según el tiempo y utilizar una prueba apropiada, como Durbin-Watson para autocorrelación de primer orden en determinados modelos.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><br>
+Advertencia</strong></p>
+<p>La prueba Durbin-Watson no debe interpretarse mecánicamente en datos transversales cuyo orden de filas es arbitrario. La independencia también depende del diseño de muestreo y de la estructura de los datos.</p>
+</div>
+</div>
+<p><strong>Homoscedasticidad</strong></p>
+<p>Se supone que la varianza del error condicional a los predictores es constante:</p>
+<p><span class="math display">\operatorname{Var}(\varepsilon_i \mid X) = \sigma^2</span> Cuando la dispersión de los errores cambia según el nivel ajustado o los predictores, existe heteroscedasticidad.</p>
+<p><strong>Diagnóstico gráfico:</strong> residuos frente a valores ajustados. Una forma de embudo puede sugerir varianza no constante.</p>
+<p><strong>Prueba:</strong> Breusch-Pagan. Sus hipótesis son:</p>
+<ul>
+<li><span class="math inline">H_0</span>: varianza constante (homoscedasticidad).</li>
+<li><span class="math inline">H_1</span>: varianza no constante (heteroscedasticidad).</li>
+</ul>
+<p>Con un nivel de significancia de 0.05, un valor p menor que 0.05 aporta evidencia contra la homoscedasticidad. Un valor p mayor o igual que 0.05 significa que no se rechaza <span class="math inline">H_0</span> ; no demuestra que el supuesto sea verdadero.</p>
+<p><strong>Normalidad de los errores</strong></p>
+<p>Para la inferencia clásica exacta en muestras pequeñas se suele asumir que los errores condicionales son normales:</p>
+<p><span class="math display">\varepsilon_i \mid X \sim N(0, \sigma^2)</span> La normalidad se refiere a los errores no observables; en la práctica se examinan los residuos como aproximación.</p>
+<p><strong>Diagnóstico:</strong> gráfico Q-Q e histograma de residuos.</p>
+<p><strong>Prueba:</strong> Shapiro-Wilk.</p>
+<ul>
+<li><span class="math inline">H_0</span>: los residuos son compatibles con una distribución normal.</li>
+<li><span class="math inline">H_1</span>: los residuos no son compatibles con una distribución normal.</li>
+</ul>
+<p>Un valor p pequeño indica evidencia contra la normalidad. La prueba puede detectar desviaciones pequeñas en muestras grandes y tener poca potencia en muestras pequeñas. Por eso debe interpretarse junto con el Q-Q plot y el tamaño de muestra.</p>
+<p>La normalidad no es requisito para que los estimadores MCO sean insesgados bajo los demás supuestos pertinentes; es principalmente relevante para la inferencia exacta en muestras pequeñas.</p>
+<p><strong>Ausencia de multicolinealidad severa</strong></p>
+<p>Los predictores no deben presentar relaciones lineales exactas y es deseable que no exista multicolinealidad severa. Cuando los predictores están muy correlacionados, los errores estándar pueden aumentar y los coeficientes individuales volverse inestables.</p>
+<p>Diagnóstico: matriz de correlaciones entre predictores y factor de inflación de la varianza (VIF).</p>
+<p>Como reglas orientativas, VIF por encima de 5 puede motivar revisión y por encima de 10 suele considerarse una señal más preocupante. No son límites universales: deben valorarse según el propósito, la teoría y la estructura de los datos.</p>
+<p><strong>Valores atípicos y observaciones influyentes</strong></p>
+<p>Markdown Una observación puede tener un residuo grande, alto apalancamiento o una influencia importante sobre los coeficientes.</p>
+<ul>
+<li><strong>Residuo estudentizado:</strong> ayuda a identificar observaciones con respuestas inusuales respecto del modelo.</li>
+<li><strong>Apalancamiento (leverage):</strong> mide qué tan extrema es la combinación de predictores.</li>
+<li><strong>Distancia de Cook:</strong> resume cuánto cambiaría el ajuste al retirar una observación.</li>
+</ul>
+<p>La referencia <span class="math inline">4/n</span> para distancia de Cook es una regla exploratoria, no un criterio automático para eliminar datos. Toda observación señalada debe revisarse por posibles errores, características legítimas o problemas de especificación.</p>
+<p><strong>Resumen de los diagnósticos</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Supuesto o aspecto</th>
+<th style="text-align: left;">Herramienta</th>
+<th style="text-align: left;">Señal de alerta</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Linealidad</td>
+<td style="text-align: left;">Residuos vs.&nbsp;ajustados y predictores</td>
+<td style="text-align: left;">Curvatura o patrón sistemático</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Independencia</td>
+<td style="text-align: left;">Diseño, orden temporal, Durbin-Watson cuando proceda</td>
+<td style="text-align: left;">Dependencia o autocorrelación</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Homoscedasticidad</td>
+<td style="text-align: left;">Residuos vs.&nbsp;ajustados, Breusch-Pagan</td>
+<td style="text-align: left;">Embudo o evidencia de varianza no constante</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Normalidad de residuos</td>
+<td style="text-align: left;">Q-Q plot, histograma, Shapiro-Wilk</td>
+<td style="text-align: left;">Desviaciones marcadas de la diagonal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Multicolinealidad</td>
+<td style="text-align: left;">Correlaciones y VIF</td>
+<td style="text-align: left;">VIF elevados o predictores redundantes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Influencia</td>
+<td style="text-align: left;">Residuos, leverage y Cook</td>
+<td style="text-align: left;">Casos que afectan sustancialmente el ajuste</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ejercicio-propuesto" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> .Ejercicio propuesto</h1>
+<p><strong>gestión de servicios en una alcaldía</strong></p>
+<p>Una alcaldía desea analizar los factores relacionados con la satisfacción de los ciudadanos con la atención recibida. Se dispone de información de 80 jornadas de atención. La variable respuesta es el puntaje promedio de satisfacción, en una escala de 0 a 100. Se consideran como posibles predictores el tiempo promedio de espera, el número de funcionarios disponibles, las horas de capacitación del equipo y el porcentaje de trámites digitalizados.</p>
+<p><strong>Situación problema</strong></p>
+<p>Una alcaldía desea analizar los factores relacionados con la satisfacción de los ciudadanos con la atención recibida. Para ilustrar el procedimiento se construirá una base <strong>simulada</strong> de 80 jornadas de atención. Se consideran cinco variables:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Descripción</th>
+<th style="text-align: left;">Unidad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>satisfaccion</strong></td>
+<td style="text-align: left;">Puntaje promedio de satisfacción (respuesta)</td>
+<td style="text-align: left;">Escala 0–100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>tiempo espera</strong></td>
+<td style="text-align: left;">Tiempo promedio de espera</td>
+<td style="text-align: left;">Minutos</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>funcionarios</strong></td>
+<td style="text-align: left;">Número de funcionarios disponibles</td>
+<td style="text-align: left;">Personas</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>capacitacion</strong></td>
+<td style="text-align: left;">Horas de capacitación del equipo</td>
+<td style="text-align: left;">Horas</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>digitalizacion</strong></td>
+<td style="text-align: left;">Porcentaje de trámites digitalizados</td>
+<td style="text-align: left;">Porcentaje (0–100%)</td>
+</tr>
+</tbody>
+</table>
+<p>La pregunta de investigación es: <strong>¿en qué medida el tiempo promedio de espera, el número de funcionarios disponibles, las horas de capacitación del equipo y el porcentaje de trámites digitalizados se relacionan con el puntaje promedio de satisfacción ciudadana?</strong></p>
+</section>
+<section id="creacion-de-la-base-de-datos" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> .Creacion de la base de datos</h1>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instalar una sola vez si los paquetes no están disponibles:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c("tidyverse", "car", "lmtest", "broom"))</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">80</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>Data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">tiempo_espera  =</span> <span class="fu">runif</span>(n, <span class="dv">5</span>, <span class="dv">45</span>),          <span class="co"># Tiempo promedio de espera (minutos)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">funcionarios   =</span> <span class="fu">sample</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">20</span>, n, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="co"># Número de funcionarios disponibles</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">capacitacion   =</span> <span class="fu">runif</span>(n, <span class="dv">2</span>, <span class="dv">40</span>),          <span class="co"># Horas de capacitación del equipo</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">digitalizacion =</span> <span class="fu">runif</span>(n, <span class="dv">10</span>, <span class="dv">95</span>)          <span class="co"># Porcentaje de trámites digitalizados (%)</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">satisfaccion_raw =</span> <span class="dv">55</span> <span class="sc">-</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="fl">0.60</span> <span class="sc">*</span> tiempo_espera <span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      <span class="fl">1.15</span> <span class="sc">*</span> funcionarios <span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="fl">0.35</span> <span class="sc">*</span> capacitacion <span class="sc">+</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      <span class="fl">0.22</span> <span class="sc">*</span> digitalizacion <span class="sc">+</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">5</span>),</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">satisfaccion =</span> <span class="fu">pmin</span>(<span class="fu">pmax</span>(satisfaccion_raw, <span class="dv">0</span>), <span class="dv">100</span>) <span class="co"># Acotado a escala 0-100</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>satisfaccion_raw)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 80
+Columns: 5
+$ tiempo_espera  &lt;dbl&gt; 32.946939, 27.261220, 10.605598, 16.428932, 27.214760, …
+$ funcionarios   &lt;int&gt; 7, 18, 4, 15, 9, 16, 7, 11, 9, 19, 9, 20, 4, 20, 9, 8, …
+$ capacitacion   &lt;dbl&gt; 20.868837, 35.409060, 29.426794, 39.580198, 4.725594, 7…
+$ digitalizacion &lt;dbl&gt; 76.32775, 32.78878, 81.24042, 52.21807, 47.81592, 63.77…
+$ satisfaccion   &lt;dbl&gt; 57.68619, 81.17657, 85.52070, 77.70997, 60.02877, 81.23…</code></pre>
+</div>
+</div>
+</section>
+<section id="exploracion-de-variables" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> .Exploracion de variables</h1>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> tiempo_espera     funcionarios    capacitacion    digitalizacion 
+ Min.   : 5.048   Min.   : 4.00   Min.   : 3.055   Min.   :12.68  
+ 1st Qu.:14.039   1st Qu.: 7.00   1st Qu.:15.750   1st Qu.:32.87  
+ Median :23.047   Median : 9.00   Median :25.278   Median :56.61  
+ Mean   :23.481   Mean   :11.34   Mean   :23.267   Mean   :55.36  
+ 3rd Qu.:32.743   3rd Qu.:16.00   3rd Qu.:30.998   3rd Qu.:74.16  
+ Max.   :43.872   Max.   :20.00   Max.   :39.842   Max.   :93.96  
+  satisfaccion  
+ Min.   :44.43  
+ 1st Qu.:66.38  
+ Median :73.98  
+ Mean   :73.49  
+ 3rd Qu.:80.81  
+ Max.   :95.87  </code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>La base simulada reúne <strong>80 jornadas de atención</strong> y <strong>5 variables</strong> con el siguiente comportamiento descriptivo:</p>
+<ul>
+<li><strong>Satisfacción ciudadana (satisfaccion):</strong> presenta un promedio de <strong>73.49</strong> y una mediana de <strong>73.98</strong> (entre <strong>44.43</strong> y <strong>95.87</strong>), evidenciando un desempeño general favorable y relativamente equilibrado en la escala de 0 a 100.</li>
+<li><strong>Tiempo de espera (tiempo_espera):</strong> registra una media de <strong>23.48</strong> minutos y una mediana de <strong>23.05</strong> minutos (mínimo <strong>5.05</strong>, máximo <strong>43.87</strong>), reflejando esperas intermedias con variabilidad considerable entre jornadas.</li>
+<li><strong>Funcionarios disponibles (funcionarios):</strong> va de <strong>4</strong> a <strong>20</strong> personas, con media de <strong>11.34</strong> y mediana de <strong>9.00</strong>, sugiriendo una leve asimetría hacia jornadas con mayor personal.</li>
+<li><strong>Capacitación (capacitacion):</strong> oscila entre <strong>3.06</strong> y <strong>39.84</strong> horas, con promedio de <strong>23.27</strong> horas y mediana de <strong>25.28</strong> horas.</li>
+<li><strong>Digitalización (digitalizacion):</strong> varía entre <strong>12.68%</strong> y <strong>93.96%</strong>, con media de <strong>55.36%</strong> y mediana de <strong>56.61%</strong>, lo que indica diferencias marcadas en la digitalización de trámites entre jornadas.</li>
+</ul>
+</section>
+<section id="estimamos-el-modelo" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> .Estimamos el modelo</h1>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  satisfaccion <span class="sc">~</span> tiempo_espera <span class="sc">+</span> funcionarios <span class="sc">+</span> capacitacion <span class="sc">+</span> digitalizacion,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> Data</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = satisfaccion ~ tiempo_espera + funcionarios + capacitacion + 
+    digitalizacion, data = Data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.3399 -2.6286  0.1419  2.6863 11.2615 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    56.48874    2.20305  25.641  &lt; 2e-16 ***
+tiempo_espera  -0.56595    0.04288 -13.199  &lt; 2e-16 ***
+funcionarios    1.23379    0.09330  13.223  &lt; 2e-16 ***
+capacitacion    0.28149    0.04770   5.901 9.76e-08 ***
+digitalizacion  0.17617    0.02081   8.467 1.54e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.346 on 75 degrees of freedom
+Multiple R-squared:  0.8483,    Adjusted R-squared:  0.8403 
+F-statistic: 104.9 on 4 and 75 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<section id="interpretación-del-modelo-estimado" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="interpretación-del-modelo-estimado"><span class="header-section-number">8.1</span> .Interpretación del modelo estimado</h2>
+<ul>
+<li><p><strong>Intercepto (81.1134, <span class="math inline">p &lt; 0.001</span>):</strong> valor esperado de la variable respuesta cuando todos los predictores toman valor cero[cite: 8].</p></li>
+<li><p><strong>Pendientes condicionales (todos con <span class="math inline">p &lt; 0.001</span>):</strong> manteniendo constantes los demás predictores, un aumento de 1 unidad en <strong>capacitacion</strong>, <strong>experiencia</strong>, <strong>tecnologia</strong> y <strong>personal</strong> se asocia con cambios promedio esperados de <strong>+4.96</strong>, <strong>+3.27</strong>, <strong>+12.04</strong> y <strong>+12.25</strong> trámites mensuales, respectivamente[cite: 8].</p></li>
+<li><p><strong>Ajuste y prueba global:</strong> el <span class="math inline">R^2</span> múltiple es <strong>0.8883</strong> (<span class="math inline">R^2</span> ajustado de <strong>0.8844</strong>) y el estadístico <span class="math inline">F</span> es <strong>228.5</strong> (<span class="math inline">p &lt; 2.2 \times 10^{-16}</span>), indicando que el modelo en conjunto explica una <strong>roporción alta de la variabilidad de `tramites</strong>, con un error estándar residual de <strong>25.25</strong>[cite: 8].</p></li>
+</ul>
+<p><strong>Tabla ordenada:</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(modelo, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 7
+  term           estimate std.error statistic  p.value conf.low conf.high
+  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)      56.5      2.20       25.6  7.43e-39   52.1      60.9  
+2 tiempo_espera    -0.566    0.0429    -13.2  3.03e-21   -0.651    -0.481
+3 funcionarios      1.23     0.0933     13.2  2.75e-21    1.05      1.42 
+4 capacitacion      0.281    0.0477      5.90 9.76e- 8    0.186     0.377
+5 digitalizacion    0.176    0.0208      8.47 1.54e-12    0.135     0.218</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">glance</span>(modelo)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.848         0.840  4.35      105. 6.29e-30     4  -228.  469.  483.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>El modelo estimado explica el 84.8% de la variabilidad de la satisfacción ciudadana en las 80 jornadas (<span class="math inline">R^2 = 0.848</span>, <span class="math inline">R^2_{\text{ajustado}} = 0.840</span>), resultando globalmente significativo (<span class="math inline">F = 105</span>, <span class="math inline">p = 6.29 \times 10^{-30}</span>) con un error estándar residual de 4.35 puntos en la escala de 0 a 100. Individualmente, todos los predictores son estadísticamente significativos (<span class="math inline">p &lt; 0.001</span>) y sus intervalos de confianza al 95% excluyen el cero: manteniendo constantes los demás factores, por cada minuto adicional de espera (tiempo_espera) la satisfacción disminuye en promedio 0.57 puntos (<span class="math inline">\hat{\beta}_1 = -0.566</span>, IC 95%: <span class="math inline">[-0.651, -0.481]</span>), mientras que aumenta en 1.23 puntos por cada funcionario adicional (funcionarios, IC 95%: <span class="math inline">[1.05, 1.42]</span>), en 0.28 puntos por cada hora adicional de capacitación (capacitacion, IC 95%: <span class="math inline">[0.186, 0.377]</span>) y en 0.18 puntos por cada punto porcentual adicional de digitalización (digitalizacion, IC 95%: <span class="math inline">[0.135, 0.218]</span>).</p>
+</section>
+</section>
+<section id="predicción-para-una-jornada-de-atención" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> .Predicción para una jornada de atención</h1>
+<p>Se construye un escenario ilustrativo con un tiempo promedio de espera de 15 minutos, 12 funcionarios disponibles, 25 horas de capacitación del equipo y un 70% de trámites digitalizados:</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>nueva_jornada <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">tiempo_espera =</span> <span class="dv">15</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">funcionarios =</span> <span class="dv">12</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">capacitacion =</span> <span class="dv">25</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">digitalizacion =</span> <span class="dv">70</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  modelo,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> nueva_jornada,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval =</span> <span class="st">"prediction"</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="fl">0.95</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 82.17444 73.40853 90.94035</code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>Para una jornada de atención individual con un tiempo promedio de espera de 15 minutos, 12 funcionarios disponibles, 25 horas de capacitación del equipo y un 70% de trámites digitalizados, el modelo estima un puntaje esperado de satisfacción ciudadana de 82.17 puntos (fit = 82.17444) en la escala de 0 a 100. Asimismo, con un 95% de confianza, se proyecta que el puntaje de satisfacción observado en una jornada individual con estas características se ubicará entre 73.41 (lwr = 73.40853) y 90.94 puntos (upr = 90.94035), rango que incorpora tanto la incertidumbre en la estimación de la media como la variabilidad aleatoria propia de una observación individual.</p>
+</section>
+<section id="validación-de-los-supuestos-en-r" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> .Validación de los supuestos en R</h1>
+<section id="diagnóstico-gráfico-general" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="diagnóstico-gráfico-general"><span class="header-section-number">10.1</span> .Diagnóstico gráfico general</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>La matriz de dispersión muestra visualmente cómo se relacionan todas las variables entre sí, destacando en la fila inferior y en la columna derecha el comportamiento respecto a la satisfacción ciudadana (satisfaccion): se observa una relación negativa clara con el tiempo_espera (a medida que aumentan los minutos de espera, los puntos descienden indicando menor satisfacción), y una relación positiva con el número de funcionarios, las horas de capacitacion y el porcentaje de digitalizacion (a mayores valores en estos tres factores, los puntos tienden a subir hacia puntajes más altos de satisfacción). Por otro lado, los cruces entre los cuatro predictores muestran nubes de puntos dispersas sin patrones marcados, lo que sugiere de forma preliminar que son variables independientes entre sí y no presentan problemas graves de colinealidad.</p>
+</section>
+<section id="linealidad-y-homoscedasticidad-residuos-frente-a-ajustados" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="linealidad-y-homoscedasticidad-residuos-frente-a-ajustados"><span class="header-section-number">10.2</span> .Linealidad y homoscedasticidad: residuos frente a ajustados</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>diagnostico <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ajustados =</span> <span class="fu">fitted</span>(modelo),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">residuos =</span> <span class="fu">residuals</span>(modelo)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diagnostico, <span class="fu">aes</span>(<span class="at">x =</span> ajustados, <span class="at">y =</span> residuos)) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#2364AA"</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"#D1495B"</span>) <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Residuos frente a valores ajustados"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Valores ajustados"</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Residuos"</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>El gráfico de Residuos frente a valores ajustados muestra que los puntos se distribuyen de forma aleatoria alrededor de la línea horizontal punteada en cero, sin formar una curva marcada ni un patrón en forma de embudo. Aunque la línea roja suavizada presenta ligeras ondulaciones propias de la muestra de 80 jornadas, se mantiene muy cercana a cero a lo largo de todo el rango de valores ajustados, lo que respalda visualmente tanto el supuesto de linealidad del modelo como la <strong>homoscedasticidad</strong> (varianza constante de los errores).</p>
+</section>
+<section id="normalidad-q-q-plot-e-histograma" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="normalidad-q-q-plot-e-histograma"><span class="header-section-number">10.3</span> .Normalidad: Q-Q plot e histograma</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">tibble</span>(<span class="at">residuos =</span> <span class="fu">residuals</span>(modelo)),</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">sample =</span> residuos)) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">color =</span> <span class="st">"#D1495B"</span>) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Gráfico Q-Q de los residuos"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Cuantiles teóricos"</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Cuantiles muestrales"</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>El gráfico Q-Q de los residuos compara los cuantiles de los residuos del modelo frente a los cuantiles teóricos de una distribución normal. En este caso, la gran mayoría de los puntos se alinean muy cerca de la recta diagonal roja en todo el tramo central, con apenas ligeras desviaciones en los extremos (las colas inferior y superior) propias de una muestra finita de 80 observaciones. Esto indica que los errores del modelo siguen aproximadamente una distribución normal, respaldando visualmente el supuesto de normalidad necesario para la validez de los intervalos de confianza y las pruebas de hipótesis.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">tibble</span>(<span class="at">residuos =</span> <span class="fu">residuals</span>(modelo)),</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> residuos)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">bins =</span> <span class="dv">20</span>, <span class="at">fill =</span> <span class="st">"#6C9BCF"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> dnorm,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">args =</span> <span class="fu">list</span>(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">mean =</span> <span class="fu">mean</span>(<span class="fu">residuals</span>(modelo)),</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">sd =</span> <span class="fu">sd</span>(<span class="fu">residuals</span>(modelo))</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#D1495B"</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribución de los residuos"</span>,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Residuos"</span>,</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Densidad"</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>El histograma de Distribución de los residuos muestra cómo se agrupan los errores del modelo alrededor de cero. Se observa que la mayor concentración de barras se ubica en el centro (cerca de 0) y va disminuyendo de manera relativamente simétrica hacia ambos extremos, siguiendo de cerca la forma de campana de la curva normal teórica superpuesta en rojo. Aunque aparecen ligeras irregularidades en algunas barras y un valor aislado cerca de 11 propios de una muestra de 80 observaciones, el comportamiento general confirma visualmente que los residuos se distribuyen de forma aproximadamente normal.</p>
+<p><strong>Prueba de Shapiro-Wilk:</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals(modelo)
+W = 0.9848, p-value = 0.4629</code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>La prueba de Shapiro-Wilk evalúa formalmente el supuesto de normalidad de los residuos del modelo, planteando como hipótesis nula (<span class="math inline">H_0</span>) que los errores siguen una distribución normal. Dado que el estadístico obtenido es <span class="math inline">W = 0.9848</span> y el valor <span class="math inline">p</span> es <span class="math inline">0.4629</span> (<span class="math inline">p &gt; 0.05</span>), no se rechaza la hipótesis nula, lo que confirma estadísticamente (en coherencia con el gráfico Q-Q y el histograma) que los residuos se comportan de manera compatible con una distribución normal.</p>
+</section>
+<section id="homoscedasticidad-prueba-de-breusch-pagan" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="homoscedasticidad-prueba-de-breusch-pagan"><span class="header-section-number">10.4</span> .Homoscedasticidad: prueba de Breusch-Pagan</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(modelo)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    studentized Breusch-Pagan test
+
+data:  modelo
+BP = 0.72493, df = 4, p-value = 0.9482</code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>La prueba de Breusch-Pagan evalúa formalmente el supuesto de homoscedasticidad (varianza constante de los errores del modelo), planteando como hipótesis nula (<span class="math inline">H_0</span>) que la varianza de los residuos es constante a lo largo de todos los niveles de los predictores. Dado que el estadístico obtenido es <span class="math inline">BP = 0.72493</span> (con <span class="math inline">4</span> grados de libertad) y el valor <span class="math inline">p</span> es <span class="math inline">0.9482</span> (<span class="math inline">p &gt; 0.05</span>), no se rechaza la hipótesis nula, lo que confirma estadísticamente (en coherencia con el gráfico de residuos frente a valores ajustados) que no existe evidencia de heteroscedasticidad y que la varianza de los errores se mantiene estable.</p>
+<p><strong>errores estándar robustos tipo HC3:</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instalar si es necesario:</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("sandwich")</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">coeftest</span>(modelo, <span class="at">vcov. =</span> sandwich<span class="sc">::</span><span class="fu">vcovHC</span>(modelo, <span class="at">type =</span> <span class="st">"HC3"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+t test of coefficients:
+
+                Estimate Std. Error  t value  Pr(&gt;|t|)    
+(Intercept)    56.488738   1.841659  30.6727 &lt; 2.2e-16 ***
+tiempo_espera  -0.565948   0.046977 -12.0473 &lt; 2.2e-16 ***
+funcionarios    1.233791   0.094553  13.0486 &lt; 2.2e-16 ***
+capacitacion    0.281491   0.046726   6.0243 5.857e-08 ***
+digitalizacion  0.176173   0.020532   8.5806 9.355e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>La estimación con errores estándar robustos tipo HC3 recalcula la incertidumbre de los coeficientes para garantizar que las pruebas de significancia sean válidas incluso ante posibles desviaciones leves de la homoscedasticidad o puntos con alto apalancamiento. Como se observa en la salida, las estimaciones puntuales (Estimate) permanecen idénticas al modelo original, los errores estándar robustos muestran variaciones mínimas respecto a los clásicos (0.0470 frente a 0.0429 en tiempo_espera, 0.0946 frente a 0.0933 en funcionarios, 0.0467 frente a 0.0477 en capacitacion y 0.0205 frente a 0.0208 en digitalizacion) y todos los predictores conservan una significancia estadística muy alta <span class="math inline">(p&lt;0.001)</span>, confirmando que las conclusiones del modelo sobre los determinantes de la satisfacción ciudadana son sólidas y estables.</p>
+</section>
+<section id="independencia-durbin-watson-cuando-corresponda" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="independencia-durbin-watson-cuando-corresponda"><span class="header-section-number">10.5</span> .Independencia: Durbin-Watson cuando corresponda</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">dwtest</span>(modelo)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Durbin-Watson test
+
+data:  modelo
+DW = 1.842, p-value = 0.2513
+alternative hypothesis: true autocorrelation is greater than 0</code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>La prueba de Durbin-Watson evalúa la independencia de los errores (ausencia de autocorrelación serial) bajo la hipótesis nula de no autocorrelación; dado que DW = 1.842 (cercano a 2) y p = 0.2513 (p &gt; 0.05), no se rechaza H0 y se confirma que los residuos son independientes en las 80 jornadas evaluadas.</p>
+</section>
+<section id="multicolinealidad-factor-vif" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="multicolinealidad-factor-vif"><span class="header-section-number">10.6</span> .Multicolinealidad: factor VIF</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(modelo)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> tiempo_espera   funcionarios   capacitacion digitalizacion 
+      1.004330       1.017586       1.008887       1.022397 </code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>La prueba del Factor de Inflación de la Varianza (VIF) evalúa si los predictores están correlacionados entre sí e inflan la varianza de los coeficientes; como todos los valores son cercanos a 1 (tiempo_espera = 1.0043, funcionarios = 1.0176, capacitacion = 1.0089 y digitalizacion = 1.0224) y muy inferiores a 5, se descarta multicolinealidad y se confirma que cada variable aporta información independiente sobre la satisfacción ciudadana.</p>
+<p>También puede examinarse la correlación entre los predictores:</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(tiempo_espera, funcionarios, capacitacion, digitalizacion) <span class="sc">%&gt;%</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>               tiempo_espera funcionarios capacitacion digitalizacion
+tiempo_espera     1.00000000   0.05278907   0.03584917    -0.01662716
+funcionarios      0.05278907   1.00000000  -0.01500811    -0.12107931
+capacitacion      0.03584917  -0.01500811   1.00000000     0.08587943
+digitalizacion   -0.01662716  -0.12107931   0.08587943     1.00000000</code></pre>
+</div>
+</div>
+</section>
+<section id="observaciones-influyentes-distancia-de-cook" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="observaciones-influyentes-distancia-de-cook"><span class="header-section-number">10.7</span> .Observaciones influyentes: distancia de Cook</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(modelo)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>influencia <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">observacion =</span> <span class="fu">seq_along</span>(cook),</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">cooks_distance =</span> cook</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(influencia,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> observacion, <span class="at">y =</span> cooks_distance)) <span class="sc">+</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#6C9BCF"</span>) <span class="sc">+</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">yintercept =</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">nrow</span>(Data),</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#D1495B"</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distancia de Cook por observación"</span>,</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"La línea discontinua representa la referencia exploratoria 4/n"</span>,</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Observación"</span>,</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Distancia de Cook"</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>El gráfico de Distancia de Cook por observación mide cuánto cambiarían los resultados de todo el modelo si se eliminara cada jornada individualmente, usando como alerta exploratoria la línea roja punteada <span class="math inline">(4/n = 0.050)</span>. Aunque tres observaciones (alrededor de las filas 54, 65 y 80) superan ligeramente ese umbral preventivo, el valor más alto apenas llega cerca de <span class="math inline">0.104</span>, muy lejos del límite crítico de influencia grave <span class="math inline">(Di &gt; 1)</span>, por lo que ninguna jornada distorsiona por sí sola la estimación del modelo y no es necesario eliminar datos.</p>
+<p><strong>Identificar los casos con mayor distancia de Cook:</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>influencia <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cooks_distance)) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   observacion cooks_distance
+         &lt;int&gt;          &lt;dbl&gt;
+ 1          65         0.103 
+ 2          54         0.0919
+ 3          80         0.0516
+ 4           4         0.0477
+ 5           3         0.0446
+ 6          44         0.0433
+ 7          71         0.0409
+ 8          47         0.0386
+ 9          29         0.0379
+10          79         0.0367</code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>La tabla identifica las diez jornadas con mayor Distancia de Cook, confirmando que solo las observaciones <span class="math inline">65 (0.103)4</span> <span class="math inline">54 (0.0919)</span> y <span class="math inline">80 (0.0516)</span> superan ligeramente el umbral exploratorio preventivo <span class="math inline">(4/n = 0.050)</span>. Como incluso el valor máximo <span class="math inline">(0.103)</span> está muy por debajo del criterio crítico de influencia grave <span class="math inline">(Di &gt; 1)</span>, se concluye que no hay casos atípicos influyentes que distorsionen el modelo y no es necesario eliminar observaciones.</p>
+</section>
+<section id="tabla-resumen-de-pruebas" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="tabla-resumen-de-pruebas"><span class="header-section-number">10.8</span> .Tabla resumen de pruebas</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> lmtest<span class="sc">::</span><span class="fu">bptest</span>(modelo)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>sw <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo))</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>dw <span class="ot">&lt;-</span> lmtest<span class="sc">::</span><span class="fu">dwtest</span>(modelo)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>resultados_pruebas <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Prueba =</span> <span class="fu">c</span>(<span class="st">"Breusch-Pagan"</span>, <span class="st">"Shapiro-Wilk"</span>, <span class="st">"Durbin-Watson"</span>),</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Estadistico =</span> <span class="fu">c</span>(</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unname</span>(bp<span class="sc">$</span>statistic),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unname</span>(sw<span class="sc">$</span>statistic),</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unname</span>(dw<span class="sc">$</span>statistic)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">Valor_p =</span> <span class="fu">c</span>(bp<span class="sc">$</span>p.value, sw<span class="sc">$</span>p.value, dw<span class="sc">$</span>p.value),</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Hipotesis_nula =</span> <span class="fu">c</span>(</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Varianza constante"</span>,</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Residuos compatibles con normalidad"</span>,</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Sin autocorrelación de primer orden"</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">Decision_05 =</span> <span class="fu">if_else</span>(</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>      Valor_p <span class="sc">&lt;</span> <span class="fl">0.05</span>,</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Rechazar H0"</span>,</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">"No rechazar H0"</span></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>resultados_pruebas</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  Prueba        Estadistico Valor_p Hipotesis_nula                   Decision_05
+  &lt;chr&gt;               &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                            &lt;chr&gt;      
+1 Breusch-Pagan       0.725   0.948 Varianza constante               No rechaza…
+2 Shapiro-Wilk        0.985   0.463 Residuos compatibles con normal… No rechaza…
+3 Durbin-Watson       1.84    0.251 Sin autocorrelación de primer o… No rechaza…</code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong></p>
+<p>La tabla resumen confirma el cumplimiento de los supuestos: homoscedasticidad (<span class="math inline">BP = 0.725, p = 0.948</span>), normalidad (<span class="math inline">W = 0.985, p = 0.463</span>) e independencia (<span class="math inline">DW = 1.84, p = 0.251</span>). Con <span class="math inline">p &gt; 0.05</span> en todas las pruebas, no se rechaza <span class="math inline">H_0</span>.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="index_files/libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
